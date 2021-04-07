@@ -1,0 +1,12 @@
+Friendly Reminders
+1|Show messages when a goal is scored|show_goal_messages
+1|Show messages when a game is finished|show_game_finished_messages
+8|
+1|Use both lists of messages for both message events|combine_messages
+8|
+9|Method for how messages should be picked from the lists:
+6||pick_message_method|Random@Random&Indexed@Indexed
+8|
+9|Separate messages with commas in the lists below. Unfortunately, there is no way to escape commas at the moment.
+12|Goal messages|goal_messages
+12|Game finishes messages|game_finished_messages
