@@ -1,7 +1,7 @@
 #include "FriendlyReminders.h"
 
 // Initialise plugin
-BAKKESMOD_PLUGIN(FriendlyReminders, "Friendly Reminders", "0.2", PLUGINTYPE_FREEPLAY)
+BAKKESMOD_PLUGIN(FriendlyReminders, "Friendly Reminders", "0.3", PLUGINTYPE_FREEPLAY)
 
 // Define CVARs
 #define CVAR_SHOW_GOAL_MESSAGES "show_goal_messages"
@@ -10,6 +10,7 @@ BAKKESMOD_PLUGIN(FriendlyReminders, "Friendly Reminders", "0.2", PLUGINTYPE_FREE
 #define CVAR_COMBINE_MESSAGES "combine_messages"
 
 #define CVAR_PICK_MESSAGE_METHOD "pick_message_method"
+#define CVAR_DISPLAY_MESSAGE_METHOD "display_message_method"
 
 #define CVAR_GOAL_MESSAGES "goal_messages"
 #define CVAR_GAME_FINISHED_MESSAGES "game_finished_messages"
@@ -22,6 +23,7 @@ void FriendlyReminders::onLoad()
 	cvar_show_game_finished_messages = std::make_shared<bool>(true);
 	cvar_combine_messages = std::make_shared<bool>(false);
 	cvar_pick_message_method = std::make_shared<std::string>("Random");
+	cvar_display_message_method = std::make_shared<std::string>("Default");
 	// TODO: Find a better way to implement a list of messages
 	//cvar_goal_messages = std::make_shared<std::string>("Drink some water!,Check your posture!");
 	//cvar_game_finished_messages = std::make_shared<std::string>("Do some push-ups!,Do some sit-ups");
@@ -40,6 +42,10 @@ void FriendlyReminders::onLoad()
 	// Message picking method (Random, Indexed)
 	cvarManager->registerCvar(CVAR_PICK_MESSAGE_METHOD, "Random", "Method for how messages should be picked from the lists", false, false, 0, false, 0, true)
 		.bindTo(cvar_pick_message_method);
+
+	// Message display method (Default, Notification)
+	cvarManager->registerCvar(CVAR_DISPLAY_MESSAGE_METHOD, "Default", "Method for how messages will be displayed on the screen", false, false, 0, false, 0, true)
+		.bindTo(cvar_display_message_method);
 
 	// Comma separated messages
 	cvarManager->registerCvar(CVAR_GOAL_MESSAGES, "Drink some water!,Check your posture!", "Comma separated messages to be displayed when a goal is scored", true, false, 0, false, 0, true)
@@ -263,21 +269,46 @@ std::string FriendlyReminders::GetNextMessage(EventType eventType)
 // Method to display message to user
 void FriendlyReminders::DisplayMessage(std::string& message, int displayTime)
 {
-	currentMessage = message;
 	currentMessageIndex++;
 
-	int thisMessageIndex = currentMessageIndex;
+	// Check display method
+	if (cvar_display_message_method.get()->compare("Default") == 0)
+	{
+		currentMessage = message;
 
-	// Clear message if it hasn't changed
-	gameWrapper->SetTimeout(
-		[this, thisMessageIndex](GameWrapper* gameWrapper)
+		int thisMessageIndex = currentMessageIndex;
+
+		// Clear message if it hasn't changed
+		gameWrapper->SetTimeout(
+			[this, thisMessageIndex](GameWrapper* gameWrapper)
+			{
+				if (currentMessageIndex != thisMessageIndex) return;
+
+				currentMessage = "";
+			},
+			displayTime
+		);
+	}
+	else// if (cvar_display_message_method.get()->compare("Notification") == 0)
+	{
+		// Get notifications enabled state
+		bool notificiationsEnabled = cvarManager->getCvar("cl_notifications_enabled_beta").getBoolValue();
+
+		// Enable notifications if currently disabled
+		if (!notificiationsEnabled)
 		{
-			if (currentMessageIndex != thisMessageIndex) return;
+			cvarManager->executeCommand("cl_notifications_enabled_beta 1");
+		}
 
-			currentMessage = "";
-		},
-		displayTime
-			);
+		// Display notification
+		gameWrapper->Toast("Friendly Reminder", message, "default", displayTime);
+
+		// Restore notifications enabled state
+		if (!notificiationsEnabled)
+		{
+			cvarManager->executeCommand("cl_notifications_enabled_beta 0");
+		}
+	}
 }
 
 // String split method

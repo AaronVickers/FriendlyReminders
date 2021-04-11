@@ -22,6 +22,7 @@ private:
 	std::shared_ptr<bool> cvar_show_game_finished_messages;
 	std::shared_ptr<bool> cvar_combine_messages;
 	std::shared_ptr<std::string> cvar_pick_message_method;
+	std::shared_ptr<std::string> cvar_display_message_method;
 	//std::shared_ptr<std::string> cvar_goal_messages;
 	//std::shared_ptr<std::string> cvar_game_finished_messages;
 

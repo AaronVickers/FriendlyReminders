@@ -5,7 +5,9 @@ Friendly Reminders
 1|Use both lists of messages for both message events|combine_messages
 8|
 9|Method for how messages should be picked from the lists:
-6||pick_message_method|Random@Random&Indexed@Indexed
+6|##0|pick_message_method|Random@Random&Indexed@Indexed
+9|Method for how messages will be displayed on the screen:
+6|##1|display_message_method|Default@Default&Notification@Notification
 8|
 9|Separate messages with commas in the lists below. Unfortunately, there is no way to escape commas at the moment.
 12|Goal messages|goal_messages
