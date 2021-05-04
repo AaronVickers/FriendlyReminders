@@ -152,6 +152,9 @@
   <ItemGroup>
     <ClCompile Include="FriendlyReminders.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="plugins\settings\friendlyreminders.set" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

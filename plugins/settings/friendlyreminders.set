@@ -12,3 +12,10 @@ Friendly Reminders
 9|Separate messages with commas in the lists below. Unfortunately, there is no way to escape commas at the moment.
 12|Goal messages|goal_messages
 12|Game finishes messages|game_finished_messages
+8|
+9|Message display controls (only for default display method)
+4|Message scale|message_scale|0|10
+4|Message position X (horizontal)|message_position_x|0|1
+4|Message position Y (vertical)|message_position_y|0|1
+4|Message anchor point X (horizontal)|message_anchor_x|0|1
+4|Message anchor point Y (vertical)|message_anchor_y|0|1
