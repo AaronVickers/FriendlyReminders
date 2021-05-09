@@ -1,7 +1,7 @@
 #include "FriendlyReminders.h"
 
 // Initialise plugin
-BAKKESMOD_PLUGIN(FriendlyReminders, "Friendly Reminders", "0.3", PLUGINTYPE_FREEPLAY)
+BAKKESMOD_PLUGIN(FriendlyReminders, "Friendly Reminders", "0.4", PLUGINTYPE_FREEPLAY)
 
 // Define CVARs
 #define CVAR_SHOW_GOAL_MESSAGES "show_goal_messages"
